@@ -1,0 +1,21 @@
+# STM32CubeIDE for VS Code
+/rollercan_ws2812_pov_demo_c562re_cmake/.settings/
+/rollercan_ws2812_pov_demo_c562re_cmake/.vscode/
+/rollercan_ws2812_pov_demo_c562re_cmake/arch/
+/rollercan_ws2812_pov_demo_c562re_cmake/build/
+/rollercan_ws2812_pov_demo_c562re_cmake/cmake/
+/rollercan_ws2812_pov_demo_c562re_cmake/generated/
+/rollercan_ws2812_pov_demo_c562re_cmake/stm32c5xx_dfp/
+/rollercan_ws2812_pov_demo_c562re_cmake/stm32c5xx_drivers/
+/rollercan_ws2812_pov_demo_c562re_cmake/user_modifiable/
+/rollercan_ws2812_pov_demo_c562re_cmake/utilities/
+.clangd
+CMakePresets.JSON
+
+# User files
+/Assets/Tools/
+/Assets/Videos/
+/Assets/Docs/
+/Assets/Arduino/
+/Assets/Libs/
+/Assets/Images/HighRes/
