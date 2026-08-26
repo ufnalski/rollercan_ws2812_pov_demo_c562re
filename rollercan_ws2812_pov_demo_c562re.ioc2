@@ -623,7 +623,7 @@
     },
     "HAL_CORTEX_PROJECT_USE_HAL": {
       "name": "HAL_CORTEX_PROJECT_USE_HAL",
-      "value": 5,
+      "value": 9,
       "originator": "sw-config-semaphore"
     },
     "HAL_ICACHE_CORE_ENABLED": {
@@ -683,7 +683,7 @@
     },
     "HAL_TIM_PROJECT_USE_HAL": {
       "name": "HAL_TIM_PROJECT_USE_HAL",
-      "value": 2,
+      "value": 3,
       "originator": "sw-config-semaphore"
     },
     "HAL_EXTI_PROJECT_USE_HAL": {
@@ -693,7 +693,7 @@
     },
     "HAL_EXTI_SYSTEM_GPIO_STANDARD_EXTI": {
       "name": "HAL_EXTI_SYSTEM_GPIO_STANDARD_EXTI",
-      "value": 1,
+      "value": 2,
       "originator": "sw-config-semaphore"
     }
   }
@@ -920,7 +920,7 @@
         {
           "id": 27,
           "name": "EXTI10",
-          "priority": 0,
+          "priority": 1,
           "subpriority": 0,
           "used": true
         },
@@ -2535,7 +2535,11 @@
       "driverConfigurationId": "e5969f4d-edf9-485e-a477-16fa8dbe62d0"
     },
     "TIM17": {
-      "driverConfigurationId": "000841cb-cbb7-49a5-a6ca-034dadffebfc",
+      "driverId": "STMicroelectronics::Device:STM32CubeMX2 Config:TIM",
+      "driverConfigurationId": "000841cb-cbb7-49a5-a6ca-034dadffebfc"
+    },
+    "TIM5": {
+      "driverConfigurationId": "e626246d-b2d9-4382-a519-355be2da10c5",
       "driverId": "STMicroelectronics::Device:STM32CubeMX2 Config:TIM"
     }
   }
@@ -3764,6 +3768,17 @@
                   "mode": "",
                   "name": "mx_tim17_init",
                   "peripheral": "TIM"
+                },
+                {
+                  "_foreignKey": "TIM5",
+                  "_rank": 5,
+                  "callable": true,
+                  "generated": true,
+                  "hw_instance": "TIM5",
+                  "layer": "HAL",
+                  "mode": "",
+                  "name": "mx_tim5_init",
+                  "peripheral": "TIM"
                 }
               ],
               "code_generation": {
@@ -4621,6 +4636,175 @@
                     "period": 65535
                   },
                   "frequency": "15 Hz"
+                },
+                "autoreload_preload": false,
+                "sampling_clock": {
+                  "clock_division": 1,
+                  "clock_division2": 1,
+                  "dts_clock_frequency": "144 MHz",
+                  "dts2_clock_frequency": "144 MHz",
+                  "kernel_clock_frequency": "144 MHz"
+                }
+              }
+            }
+          }
+        },
+        {
+          "index": 12,
+          "instanceId": "e626246d-b2d9-4382-a519-355be2da10c5",
+          "entity": "peripheral.tim",
+          "settings": {
+            "parameters": {
+              "info": {
+                "init_type": "called",
+                "labels": [],
+                "layer": "HAL"
+              },
+              "system": {
+                "nvic": {
+                  "enable_interruption_global": false
+                },
+                "dma": {
+                  "enable_dma_upd": false,
+                  "enable_dma_cc1": false,
+                  "enable_dma_cc2": false,
+                  "enable_dma_cc3": false,
+                  "enable_dma_cc4": false,
+                  "enable_dma_trgi": false
+                }
+              },
+              "channels": [
+                {
+                  "_foreignKey": "CC1",
+                  "use_channel": false
+                },
+                {
+                  "_foreignKey": "CC2",
+                  "use_channel": false
+                },
+                {
+                  "_foreignKey": "CC3",
+                  "use_channel": false
+                },
+                {
+                  "_foreignKey": "CC4",
+                  "use_channel": false
+                }
+              ],
+              "additional": {
+                "update_event": {
+                  "update_event_generation": true,
+                  "update_event_source": "REGULAR",
+                  "update_flag_remap": false
+                },
+                "ccdma_request_selection": "CC",
+                "dma_burst_configuration": {
+                  "use_dma_burst": false,
+                  "base_address": "CR1",
+                  "burst_length": "1TRANSFER",
+                  "burst_source": "UPD"
+                },
+                "encoder_interface": {
+                  "slave_mode_preload": false,
+                  "slave_mode_preload_source": "UPDATE",
+                  "encoder_index": false,
+                  "encoder_index_configuration": {
+                    "index_direction": "UP_DOWN",
+                    "index_positioning": "DOWN_DOWN",
+                    "index_blanking": "ALWAYS",
+                    "counter_reset_trigger": "ALL"
+                  }
+                },
+                "external_trigger_configuration": {
+                  "use_external_trigger": false,
+                  "external_trigger": {
+                    "id": "ETR0__external_input_trigger",
+                    "direction": "input",
+                    "source": "AFI",
+                    "type": "external input trigger",
+                    "ip_signal": "ETR0",
+                    "source_destination": [
+                      "AFI"
+                    ],
+                    "entity": "peripheral.interconnect.external input trigger",
+                    "queryId": "e9f93a6d-0ac6-4133-a367-246fa2ab2e14"
+                  },
+                  "polarity": "NONINVERTED",
+                  "filter_etr": "FDIV1",
+                  "prescaler": 1,
+                  "sync_prescaler": 1
+                },
+                "hall_sensor_interface": {
+                  "xor_gate": {
+                    "enable_xor_gate": false,
+                    "xor_gate_position": "DIRECT",
+                    "xor_input1_inversion": false,
+                    "xor_input2_inversion": false,
+                    "xor_input3_inversion": false
+                  }
+                },
+                "output_stage": {
+                  "ocref_clear": {
+                    "use_ocref_clear": false,
+                    "ocref_clear_source": {
+                      "id": "ocref_clr0__clear_signal_input_trigger",
+                      "direction": "input",
+                      "source": "comp1_out",
+                      "type": "clear signal input trigger",
+                      "instance": "COMP1",
+                      "ip_signal": "ocref_clr0",
+                      "source_destination": [
+                        "comp1_out"
+                      ],
+                      "entity": "peripheral.interconnect.clear signal input trigger",
+                      "queryId": "a0b6d169-3d70-4b5b-baac-08b3b2f44599"
+                    },
+                    "ocref_clear_source_etr": false
+                  },
+                  "pulse_generator_configuration": {
+                    "prescaler": 1,
+                    "pulse_width": 0
+                  }
+                },
+                "synchronization": {
+                  "master_mode": {
+                    "trigger_output_source": "DISABLED"
+                  },
+                  "slave_mode": {
+                    "mode": "DISABLED",
+                    "trigger_input": "ITR",
+                    "internal_trigger": {
+                      "id": "ITR0__internal_input_trigger",
+                      "direction": "input",
+                      "source": "tim1_trgo",
+                      "type": "internal input trigger",
+                      "instance": "TIM1",
+                      "ip_signal": "ITR0",
+                      "source_destination": [
+                        "tim1_trgo"
+                      ],
+                      "entity": "peripheral.interconnect.internal input trigger",
+                      "queryId": "999e5c2a-3eea-4367-8f42-8db3e1e38a0e"
+                    }
+                  }
+                }
+              },
+              "basic": {
+                "time_base": {
+                  "clock_source_configuration": {
+                    "clock_source": "INTERNAL",
+                    "prescaler": 14399,
+                    "kernel_clock_frequency": "144 MHz",
+                    "kernel_clock_source": "TIMx_Input_Clock"
+                  },
+                  "counter": {
+                    "one_pulse_mode": false,
+                    "counter_mode": "UP",
+                    "dithering": false,
+                    "period_dithering_pattern": 0,
+                    "period": 4294967295
+                  },
+                  "frequency": "0 Hz"
                 },
                 "autoreload_preload": false,
                 "sampling_clock": {

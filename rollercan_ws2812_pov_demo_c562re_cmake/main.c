@@ -57,6 +57,7 @@
 
 hal_tim_handle_t *ws2812_tim;
 hal_tim_handle_t *delay_us_tim;
+hal_tim_handle_t *delay_100us_tim; // instead of HAL_GetTick() due to interrupts
 uint8_t ws2812_data[LED_BUFFER_SIZE];
 uint8_t ws2812_ccr[8 * LED_BUFFER_SIZE]; // 64 * 1.25 us reset code
 float motor_position;
@@ -66,6 +67,8 @@ float motor_temperature;
 uint8_t b1_pressed_flag = 0;
 uint8_t b1_toggle_variable = 0;
 uint32_t ParameterReadSoftTimer;
+
+volatile uint16_t ws2812_transfer_complete_flag = 0;
 
 // create a glyph
 const uint8_t biased_message[MESSAGE_SIZE][8] = { // I :heart: K & J
@@ -90,6 +93,7 @@ void prepare_ws2812_packet(uint8_t *_data, uint8_t *_ccr, uint8_t _num_of_leds);
 void delay_us(uint32_t _delay);
 void clear_all_ws2812(void);
 void show_pov_message(void);
+uint32_t BU_GetTick(void);
 
 /**
  * brief:  The application entry point.
@@ -120,7 +124,11 @@ int main(void) {
     delay_us_tim = mx_tim17_gethandle();
     HAL_TIM_Start(delay_us_tim);
 
-    ParameterReadSoftTimer = HAL_GetTick();
+    delay_100us_tim =
+        mx_tim5_gethandle(); // instead of HAL_GetTick() due to interrupts
+    HAL_TIM_Start(delay_100us_tim);
+
+    ParameterReadSoftTimer = BU_GetTick();
 
     while (1) {
 
@@ -134,8 +142,8 @@ int main(void) {
         }
       }
 
-      if (HAL_GetTick() - ParameterReadSoftTimer > PAREMETER_READ_PERIOD) {
-        ParameterReadSoftTimer = HAL_GetTick();
+      if (BU_GetTick() - ParameterReadSoftTimer > PAREMETER_READ_PERIOD) {
+        ParameterReadSoftTimer = BU_GetTick();
         motor_speed = get_motor_speed(KNOB_CAN_ID);
         motor_current /* mA */ = get_motor_current(KNOB_CAN_ID);
         motor_temperature = get_motor_temperature(KNOB_CAN_ID);
@@ -201,13 +209,32 @@ void show_pov_message(void) {
       prepare_ws2812_packet(ws2812_data, ws2812_ccr, NUMBER_OF_LEDS);
       HAL_TIM_OC_StartChannel_DMA(ws2812_tim, HAL_TIM_CHANNEL_1, ws2812_ccr,
                                   8 * LED_BUFFER_SIZE);
-      delay_us(350);
-
+      while (ws2812_transfer_complete_flag ==
+             0) { // interrupt within interrupt -> set lower priority to EXTI10
+        __NOP();
+      }
+      ws2812_transfer_complete_flag = 0;
+      delay_us(80);
       clear_all_ws2812();
       prepare_ws2812_packet(ws2812_data, ws2812_ccr, NUMBER_OF_LEDS);
       HAL_TIM_OC_StartChannel_DMA(ws2812_tim, HAL_TIM_CHANNEL_1, ws2812_ccr,
                                   8 * LED_BUFFER_SIZE);
-      delay_us(550);
+      while (ws2812_transfer_complete_flag == 0) {
+        __NOP();
+      }
+      ws2812_transfer_complete_flag = 0;
+      delay_us(250); // guessing and checking to get visually attractive spacing
     }
+  }
+}
+
+uint32_t BU_GetTick(void) {
+  return (HAL_TIM_GetCounter(delay_100us_tim) / 10U);
+}
+
+void HAL_TIM_CompareMatchCallback(hal_tim_handle_t *htim,
+                                  hal_tim_channel_t channel) {
+  if ((htim->instance == HAL_TIM16) && (channel == HAL_TIM_CHANNEL_1)) {
+    ws2812_transfer_complete_flag = 1;
   }
 }
